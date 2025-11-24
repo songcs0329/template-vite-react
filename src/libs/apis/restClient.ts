@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
-axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
+axios.defaults.baseURL = '/api';
 
 const extractDataResponse = async <T>(promiseCallback: Promise<AxiosResponse<T, any>>) => {
   const response = await promiseCallback;
