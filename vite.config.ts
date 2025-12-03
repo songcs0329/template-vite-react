@@ -8,24 +8,7 @@ export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return defineConfig({
-    plugins: [
-      react({
-        babel: {
-          plugins: [
-            [
-              'babel-plugin-styled-components',
-              {
-                displayName: true,
-                fileName: true,
-                ssr: true,
-                meaninglessFileNames: ['index', 'styles'],
-              },
-            ],
-          ],
-        },
-      }),
-      tanstackRouter(),
-    ],
+    plugins: [react(), tanstackRouter()],
     server: {
       proxy: {
         '/api': {
@@ -39,16 +22,6 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: undefined,
-        },
-      },
-    },
-    ssr: {
-      noExternal: ['styled-components'],
     },
   });
 };
