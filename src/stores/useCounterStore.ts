@@ -15,10 +15,21 @@ const initialState: CounterState = {
   count: 0,
 };
 
-const useCounterStore = create<CounterStore>((set) => ({
-  ...initialState,
-  increment: () => set((state) => ({ count: state.count + 1 })),
-  decrement: () => set((state) => ({ count: state.count - 1 })),
-}));
+const createStore = () =>
+  create<CounterStore>((set) => ({
+    ...initialState,
+    increment: () => set((state) => ({ count: state.count + 1 })),
+    decrement: () => set((state) => ({ count: state.count - 1 })),
+  }));
+
+// SSR fallback that returns initial state
+const mockUseStore = ((selector?: any) => {
+  if (selector) {
+    return selector(initialState);
+  }
+  return initialState;
+}) as unknown as ReturnType<typeof createStore>;
+
+const useCounterStore = typeof window !== 'undefined' ? createStore() : mockUseStore;
 
 export default useCounterStore;

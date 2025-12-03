@@ -9,11 +9,11 @@ function Home() {
   return (
     <CounterWrapper>
       <CounterContainer>
-        <CounterButton variant="minus" onClick={decrement}>
+        <CounterButton $variant="minus" onClick={decrement}>
           -
         </CounterButton>
         <CounterTitle>{count}</CounterTitle>
-        <CounterButton variant="plus" onClick={increment}>
+        <CounterButton $variant="plus" onClick={increment}>
           +
         </CounterButton>
       </CounterContainer>
@@ -46,7 +46,7 @@ const CounterTitle = styled.strong`
 `;
 
 const CounterButton = styled.button<{
-  variant: 'minus' | 'plus';
+  $variant: 'minus' | 'plus';
 }>`
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@ const CounterButton = styled.button<{
   height: 24px;
   font-size: 18px;
   color: #fff;
-  background-color: ${({ variant }) => (variant === 'minus' ? '#f44336' : '#4caf50')};
+  background-color: ${({ $variant }) => ($variant === 'minus' ? '#f44336' : '#4caf50')};
 `;
 
 export default Home;
