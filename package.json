@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.87.1",
-    "axios": "^1.11.0",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "express": "^4.21.2",
+    "ky": "^1.14.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sirv": "^3.0.0",
