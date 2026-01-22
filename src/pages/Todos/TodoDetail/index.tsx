@@ -1,20 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import apiManager from '@/libs/apis/apiManager';
+import { useTodo } from '@/hooks/useTodo';
 
 function TodoDetail() {
   const { todoId } = useParams<{ todoId: string }>();
-  const [todo, setTodo] = useState<ApiResponse.GetTodoResponse | null>(null);
+  const { data: todo, isLoading, isError } = useTodo(todoId ? Number(todoId) : undefined);
 
-  useEffect(() => {
-    if (todoId) {
-      apiManager.getTodo(Number(todoId)).then(({ data }) => {
-        setTodo(data);
-      });
-    }
-  }, [todoId]);
-
-  if (!todo) return null;
+  if (!todo || isError || isLoading) return null;
 
   return (
     <ul>
