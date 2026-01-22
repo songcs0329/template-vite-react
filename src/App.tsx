@@ -1,23 +1,18 @@
-import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { routeTree } from '@/routeTree.gen';
-import GlobalStyles from '@/GlobalStyles';
-
-const router = createRouter({ routeTree });
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
+import { BrowserRouter, Routes, Route } from 'react-router';
+import Home from '@/pages/Home';
+import Todos from '@/pages/Todos';
+import TodoDetail from '@/pages/Todos/TodoDetail';
 
 function App() {
   return (
-    <>
-      <GlobalStyles />
-      <RouterProvider router={router} />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/todos" element={<Todos />} />
+        <Route path="/todos/:todoId" element={<TodoDetail />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
-

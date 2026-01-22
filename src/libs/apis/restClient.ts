@@ -1,53 +1,44 @@
-import ky from 'ky';
+import axios from 'axios';
 
-const api = ky.create({
-  prefixUrl: '/api',
+const api = axios.create({
+  baseURL: '/api',
 });
-
-// ky의 prefixUrl 사용 시 URL 앞의 슬래시 제거
-const normalizeUrl = (url: string) => url.replace(/^\/+/, '');
-
-const extractDataResponse = async <T>(promiseCallback: Promise<Response>) => {
-  const response = await promiseCallback;
-  const data = (await response.json()) as T;
-  return {
-    status: response.status,
-    data,
-  };
-};
-
-const paramsSerializer = (params: object): URLSearchParams => {
-  const searchParams = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((subValue) => searchParams.append(key, subValue));
-    } else {
-      searchParams.append(key, String(value));
-    }
-  });
-  return searchParams;
-};
 
 const restClient = {
   get: async <T>(url: string, params = {}, config = {}) => {
-    return extractDataResponse<T>(
-      api.get(normalizeUrl(url), {
-        searchParams: paramsSerializer(params),
-        ...config,
-      }),
-    );
+    const response = await api.get<T>(url, { params, ...config });
+    return {
+      status: response.status,
+      data: response.data,
+    };
   },
-  post: <T>(url: string, params = {}, config = {}) => {
-    return extractDataResponse<T>(api.post(normalizeUrl(url), { json: params, ...config }));
+  post: async <T>(url: string, data = {}, config = {}) => {
+    const response = await api.post<T>(url, data, config);
+    return {
+      status: response.status,
+      data: response.data,
+    };
   },
-  put: <T>(url: string, params = {}, config = {}) => {
-    return extractDataResponse<T>(api.put(normalizeUrl(url), { json: params, ...config }));
+  put: async <T>(url: string, data = {}, config = {}) => {
+    const response = await api.put<T>(url, data, config);
+    return {
+      status: response.status,
+      data: response.data,
+    };
   },
-  patch: <T>(url: string, params = {}, config = {}) => {
-    return extractDataResponse<T>(api.patch(normalizeUrl(url), { json: params, ...config }));
+  patch: async <T>(url: string, data = {}, config = {}) => {
+    const response = await api.patch<T>(url, data, config);
+    return {
+      status: response.status,
+      data: response.data,
+    };
   },
-  delete: <T>(url: string, params = {}) => {
-    return extractDataResponse<T>(api.delete(normalizeUrl(url), { json: params }));
+  delete: async <T>(url: string, data = {}) => {
+    const response = await api.delete<T>(url, { data });
+    return {
+      status: response.status,
+      data: response.data,
+    };
   },
 };
 
