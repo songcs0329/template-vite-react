@@ -1,12 +1,12 @@
 import { Link, useParams } from 'react-router';
-import useTodo from '@/hooks/useTodo';
+import useGetTodo from '@/hooks/useGetTodo';
 
 function TodoDetail() {
   const { todoId } = useParams<{ todoId: string }>();
   const todoIdNumber = todoId ? Number(todoId) : undefined;
   const isValidTodoId = Number.isInteger(todoIdNumber) && Number(todoIdNumber) > 0;
   const requestPath = isValidTodoId ? `/todos/${todoIdNumber}` : '/todos/:todoId';
-  const { data: todo, isLoading, isError } = useTodo(isValidTodoId ? todoIdNumber : undefined);
+  const { data: todo, isLoading, isError } = useGetTodo(isValidTodoId ? todoIdNumber : undefined);
 
   const renderContent = () => {
     if (!isValidTodoId) {

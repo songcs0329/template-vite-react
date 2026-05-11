@@ -1,16 +1,7 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import Button from '@/components/Button';
 import { cn } from '@/libs/utils/cn';
-
-const priorityOptions = [
-  { label: '낮음', value: 'low' },
-  { label: '보통', value: 'medium' },
-  { label: '높음', value: 'high' },
-] as const;
+import useTodoForm, { priorityOptions } from '@/hooks/useTodoForm';
 
 const priorityStyles = {
   low: {
@@ -27,52 +18,19 @@ const priorityStyles = {
   },
 } satisfies Record<(typeof priorityOptions)[number]['value'], { selected: string; badge: string }>;
 
-const todoFormSchema = z.object({
-  title: z.string().trim().min(2, '할 일은 2자 이상 입력해 주세요.').max(40, '할 일은 40자 이하로 입력해 주세요.'),
-  priority: z.enum(['low', 'medium', 'high']),
-  memo: z.string().max(120, '메모는 120자 이하로 입력해 주세요.').optional(),
-});
-
-type TodoFormValues = z.infer<typeof todoFormSchema>;
-type TodoItem = TodoFormValues & {
-  id: number;
-};
-
-const defaultValues: TodoFormValues = {
-  title: '',
-  priority: 'medium',
-  memo: '',
-};
-
 function Todos() {
-  const [todos, setTodos] = useState<TodoItem[]>([]);
   const {
     register,
     handleSubmit,
-    reset,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<TodoFormValues>({
-    resolver: zodResolver(todoFormSchema),
-    defaultValues,
-    mode: 'onBlur',
-  });
-
-  const selectedPriority = watch('priority');
-  const memoLength = watch('memo')?.length ?? 0;
-
-  const onSubmit = (values: TodoFormValues) => {
-    setTodos((currentTodos) => [{ ...values, id: Date.now() }, ...currentTodos]);
-    reset(defaultValues);
-  };
-
-  const removeTodo = (todoId: number) => {
-    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== todoId));
-  };
-
-  const getPriorityLabel = (priority: TodoFormValues['priority']) => {
-    return priorityOptions.find((option) => option.value === priority)?.label ?? '보통';
-  };
+    errors,
+    isSubmitting,
+    selectedPriority,
+    memoLength,
+    todos,
+    onSubmit,
+    removeTodo,
+    getPriorityLabel,
+  } = useTodoForm();
 
   return (
     <main className="min-h-screen bg-stone-50 px-5 py-8 text-zinc-900 sm:px-8">
