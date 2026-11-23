@@ -8,7 +8,13 @@ export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return defineConfig({
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react({
+        // React 19는 _debugSource가 없어 Locator용 babel 플러그인 필요 (dev 전용)
+        babel: { plugins: mode === 'development' ? [['@locator/babel-jsx/dist', { env: 'development' }]] : [] },
+      }),
+      tailwindcss(),
+    ],
     server: {
       proxy: {
         '/api': {
